@@ -1,6 +1,6 @@
 import { gql, GraphQLClient } from "graphql-request";
 
-const endpoint = process.env.NEXT_PUBLIC_GRAPHCMS_ENDPOINT;
+const endpoint = process.env.NEXT_PUBLIC_HYGRAPHCMS_ENDPOINT;
 
 const graphQLClient = new GraphQLClient(endpoint);
 
@@ -41,7 +41,7 @@ export const getPosts = async () => {
   return data.postsConnection.edges;
 };
 
-export const getRelatedPosts = async (slug, categories) => {
+export const getRelatedPosts = async (categories, slug) => {
   const query = gql`
     query GetPostDetails($slug: String!, $categories: [String!]) {
       posts(
@@ -71,7 +71,7 @@ export const getRecentPosts = async () => {
   query GetPostDetails() {
     posts(
       orderBy: createdAt_DESC
-      last: 3
+      first: 3
     ) {
       title
       featuredImage {
