@@ -41,11 +41,14 @@ export const getPosts = async () => {
   return data.postsConnection.edges;
 };
 
-export const getRelatedPosts = async () => {
+export const getRelatedPosts = async (slug, categories) => {
   const query = gql`
     query GetPostDetails($slug: String!, $categories: [String!]) {
       posts(
-        where: {slug_not: $slug, AND: {categories_some: {slug_in: $categories}}}
+        where: {
+          slug_not: $slug
+          AND: { categories_some: { slug_in: $categories } }
+        }
         last: 3
       ) {
         title
@@ -58,7 +61,7 @@ export const getRelatedPosts = async () => {
     }
   `;
 
-  const data = await graphQLClient.request(query);
+  const data = await graphQLClient.request(query, { slug, categories });
 
   return data.posts;
 };
@@ -67,7 +70,7 @@ export const getRecentPosts = async () => {
   const query = gql`
   query GetPostDetails() {
     posts(
-      orderBy: createdAt_ASC
+      orderBy: createdAt_DESC
       last: 3
     ) {
       title
@@ -88,14 +91,49 @@ export const getRecentPosts = async () => {
 export const getCategories = async () => {
   const query = gql`
     query GetCategories {
-        categories {
-          name
-          slug
-        }
+      categories {
+        name
+        slug
+      }
     }
   `;
 
   const data = await graphQLClient.request(query);
 
   return data.categories;
+};
+
+// Blog Post Page Slug Details
+export const getPostDetails = async (slug) => {
+  const query = gql`
+    query GetPostDetails($slug: String!) {
+      post(where: { slug: $slug }) {
+        title
+        excerpt
+        featuredImage {
+          url
+        }
+        author {
+          name
+          bio
+          photo {
+            url
+          }
+        }
+        createdAt
+        slug
+        content {
+          json
+        }
+        categories {
+          name
+          slug
+        }
+      }
+    }
+  `;
+
+  const data = await graphQLClient.request(query, { slug });
+
+  return data.post;
 };

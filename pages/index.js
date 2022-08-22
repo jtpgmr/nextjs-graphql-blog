@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { Categories, PostCard, PostWidget } from '../components';
 import { getPosts } from '../services';
 
-export default function Home({ posts }) {
+export default Home = ({ posts }) => {
   return (
     <div className="container mx-auto px-10 mb-8">
       <Head>
