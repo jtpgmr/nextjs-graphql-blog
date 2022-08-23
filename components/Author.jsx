@@ -1,5 +1,5 @@
-import React from 'react'
-import Image from "next/image"
+import React from "react";
+import Image from "next/image";
 
 const Author = ({ author }) => {
   return (
@@ -18,6 +18,6 @@ const Author = ({ author }) => {
       <p className="text-white text-ls">{author.bio}</p>
     </div>
   );
-}
+};
 
-export default Author
+export default Author;
